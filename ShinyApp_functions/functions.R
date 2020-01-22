@@ -1,0 +1,10 @@
+### functions for Test
+source(paste0(dir_functions, "functions_for_dataLoad.R"), local=TRUE)
+source(paste0(dir_functions, "functions_scaling.R"), local=TRUE)
+source(paste0(dir_functions, "functions_for_showHide.R"), local=TRUE)
+source(paste0(dir_functions, "functions_for_InputENables.R"), local=TRUE)
+source(paste0(dir_functions, "functions_for_Test.R"), local=TRUE)
+source(paste0(dir_functions, "functions_renderPrint.R"), local=TRUE)
+source(paste0(dir_functions, "function_clustering.R"), local=TRUE)
+source(paste0(dir_functions, "functions_getParameters.R"), local=TRUE)
+source(paste0(dir_functions, "functions_for_getLikelihood.R"), local=TRUE)

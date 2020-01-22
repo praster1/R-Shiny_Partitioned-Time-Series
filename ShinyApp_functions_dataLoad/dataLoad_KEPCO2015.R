@@ -1,0 +1,1 @@
+shinyalert("Error", "Not Supported Yet.", type = "error")
