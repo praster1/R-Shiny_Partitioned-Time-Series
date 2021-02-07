@@ -3,7 +3,7 @@ CoxStuartTest_between_testVec_and_modelDataList = function(i, testVec, modelData
 {
 	tempTestVec = testVec;		tempModelData = modelDataList[[i]]
 	
-	if (scale)	{	tempTestVec = scaling(tempTestVec);		tempModelData = scaling(tempModelData)	}
+	if (scale)	{	tempTestVec = as.numeric(scale(tempTestVec));		tempModelData = as.numeric(scale(tempModelData))	}
 	res_testVec = cox_stuart_test(tempTestVec)$statistic
 	res_modelDataList = cox_stuart_test(tempModelData)$statistic
 	res = abs(res_modelDataList - res_testVec)
@@ -17,7 +17,7 @@ RunsTest_between_testVec_and_modelDataList = function(i, testVec, modelDataList,
 {
 	tempTestVec = testVec;		tempModelData = modelDataList[[i]]
 	
-	if (scale)	{	tempTestVec = scaling(tempTestVec);		tempModelData = scaling(tempModelData)	}
+	if (scale)	{	tempTestVec = as.numeric(scale(tempTestVec));		tempModelData = as.numeric(scale(tempModelData))	}
 	res_testVec = runs.test(tempTestVec, exact = TRUE)$p.value
 	res_modelDataList = runs.test(tempModelData, exact = TRUE)$p.value
 	res = abs(res_modelDataList - res_testVec)

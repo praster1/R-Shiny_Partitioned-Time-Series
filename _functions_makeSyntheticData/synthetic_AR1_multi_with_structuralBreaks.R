@@ -69,9 +69,8 @@ synthetic_AR1_multi_with_structuralBreaks = function(	initVal,	mu1, mu2, mu3, mu
 														resModel[[modelCounter]] = c(resVec1, resVec2, resVec3, resVec4)
 													}
 				
-													params[[modelCounter]] = paste("mu1 = ", i, " / sigma1 = ", j, " / alpha1 = ", k,  " / mu2 = ", ii, " / sigma2 = ", jj, " / alpha2 = ", kk,
-																										" / mu3 = ", iii, " / sigma3 = ", jjj, " / alpha3 = ", kkk,  " / mu4 = ", iiii, " / sigma4 = ", jjjj, " / alpha4 = ", kkkk, sep="")
-													print(paste(modelCounter, "/", len, sep=""))
+													params[[modelCounter]] = c(i, j, k, ii, jj, kk, iii, jjj, kkk, iiii, jjjj, kkkk)
+													# print(paste(modelCounter, "/", len, sep=""))
 													
 													if (plot)
 													{
