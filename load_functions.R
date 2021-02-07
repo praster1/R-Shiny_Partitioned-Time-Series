@@ -1,11 +1,9 @@
-dir = "./_functions/"
+dir_func = paste0(getwd(), "/_functions/")
 
+listFiles = list.files(dir_func)
+listFiles = listFiles[grep(".R", listFiles)]
 
-source(paste0(dir, "_func_seqAllDatetime_KEPCO.R"), local=TRUE)
-source(paste0(dir, "_func_getPWRQTY.R"), local=TRUE)
-source(paste0(dir, "_func_readData.R"), local=TRUE)
-source(paste0(dir, "_func_seqDateVec.R"), local=TRUE)
-source(paste0(dir, "_func_getPartialData.R"), local=TRUE)
-source(paste0(dir, "_func_Test_between_testVec_and_modelDataList.R"), local=TRUE)
-source(paste0(dir, "_func_scaling.R"), local=TRUE)
-source(paste0(dir, "_func_distance_on_philentropy.R"), local=TRUE)
+for (i in 1:length(listFiles))
+{
+	source(paste0(dir_func, listFiles[i]), local=TRUE)
+}

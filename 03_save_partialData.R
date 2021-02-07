@@ -15,13 +15,47 @@ numCores = detectCores()
 
 
 
-########## Load Sources
-dir_sources = "./_sources/"
-source(paste0(dir_sources, "dataLoad.R"), local=TRUE)	# 데이터 불러오기
+########## 데이터 불러오기
+filesDir = "./_Dataset/"
+listFiles = list.files(filesDir)
 
 
 
 
+##### Synthetic Data
+data_modelNS = qread("./_Dataset/Synthetic_ModelNS.QS")
+data_modelNS_params = qread("./_Dataset/Synthetic_ModelNS_params.QS")
+data_modelS = qread("./_Dataset/Synthetic_ModelNS.QS")
+data_modelS_params = qread("./_Dataset/Synthetic_ModelS_params.QS")
+
+
+##### Korea University
+listFiles_KoreaUniv = listFiles[grep("KoreaUniv", listFiles)]
+listFiles_KoreaUniv = listFiles_KoreaUniv[grep(".QS", listFiles_KoreaUniv)]
+listFiles_KoreaUniv = paste0(filesDir, listFiles_KoreaUniv)
+len = length(listFiles_KoreaUniv)
+
+data_KoreaUniv = pbmclapply(listFiles_KoreaUniv, qread, mc.cores=numCores)
+
+
+##### ENTSO-E
+data_ENTSOE = qread("./_Dataset/ENTSO-E.QS")
+params_ENTSOE = qread("./_Dataset/ENTSO-E_pamams.QS")
+
+
+##### KEPCO
+listFiles_KEPCO = listFiles[grep("KEPCO", listFiles)]
+listFiles_KEPCO = listFiles_KEPCO[grep(".QS", listFiles_KEPCO)]
+listFiles_KEPCO = paste0(filesDir, listFiles_KEPCO)
+len = length(listFiles_KEPCO)
+
+data_KEPCO = pbmclapply(listFiles_KEPCO, qread, mc.cores=numCores)
+
+
+
+
+
+saveDir = "_Dataset_PartialData"
 
 ########## Synthetic Data
 readData_SynthetidData = function(saveDir)
@@ -46,7 +80,7 @@ saveShinyData = function(inputDataList, saveDir)
 		resSaveDir = paste0("./", saveDir, "/", i, ".feather")
 		print(resSaveDir)
 		write_feather(as.data.frame(inputDataList[[i]]), resSaveDir)
-		Sys.sleep(1)
+		# Sys.sleep(1)
 	}
 }
 
@@ -61,150 +95,39 @@ savePartialData = function(inputDataList, saveDir, partialLen =  100, skipVal = 
 														stepSize=1, skipVal = skipVal,
 														fileProcess=FALSE, print=FALSE, printStep=1000,
 														tempFolderName = "temp",	multicore=FALSE, numCores=NULL)
-		resSaveDir = paste0("./", saveDir, "/", i, ".RDS")
+		# resSaveDir = paste0("./", saveDir, "/", i, ".RDS")
+		resSaveDir = paste0("./", saveDir, "/", i, ".QS")
 		print(resSaveDir)
-		saveRDS(resPartialData, resSaveDir)
+		# saveRDS(resPartialData, resSaveDir)
+		qsave(resPartialData, resSaveDir)
 	}
 }
 
 
-### Model NS
-saveDir = "_dataset_SyntheticData/NS"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/NS")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/NS", partialLen=100)
 
-### Model NS-1
-saveDir = "_dataset_SyntheticData/NS-1"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/NS-1")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/NS-1", partialLen=100)
-
-### Model NS-2
-saveDir = "_dataset_SyntheticData/NS-2"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/NS-2")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/NS-2", partialLen=100)
-
-### Model NS-3
-saveDir = "_dataset_SyntheticData/NS-3"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/NS-3")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/NS-3", partialLen=100)
-
-### Model NS-4
-saveDir = "_dataset_SyntheticData/NS-4"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/NS-4")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/NS-4", partialLen=100)
-
-### Model NS-5
-saveDir = "_dataset_SyntheticData/NS-5"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/NS-5")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/NS-5", partialLen=100)
-
-### Model NS-6
-saveDir = "_dataset_SyntheticData/NS-6"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/NS-6")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/NS-6", partialLen=100)
-
-### Model NS-7
-saveDir = "_dataset_SyntheticData/NS-7"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/NS-7")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/NS-7", partialLen=100)
-
-
-
-##### with Structural Breaks
-
-### Model S
-saveDir = "_dataset_SyntheticData/S"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/S")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/S", partialLen=100)
-
-### Model S-1
-saveDir = "_dataset_SyntheticData/S-1"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/S-1")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/S-1", partialLen=100)
-
-### Model S-2
-saveDir = "_dataset_SyntheticData/S-2"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/S-2")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/S-2", partialLen=100)
-
-### Model S-3
-saveDir = "_dataset_SyntheticData/S-3"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/S-3")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/S-3", partialLen=100)
-
-### Model S-4
-saveDir = "_dataset_SyntheticData/S-4"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/S-4")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/S-4", partialLen=100)
-
-### Model S-5
-saveDir = "_dataset_SyntheticData/S-5"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/S-5")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/S-5", partialLen=100)
-
-### Model S-6
-saveDir = "_dataset_SyntheticData/S-6"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/S-6")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/S-6", partialLen=100)
-
-### Model S-7	#
-saveDir = "_dataset_SyntheticData/S-7"
-tempDataList = readData_SynthetidData(saveDir)
-saveShinyData(inputDataList=tempDataList, saveDir="ShinyApp_dataset_SyntheticData/S-7")
-savePartialData(inputDataList=tempDataList, saveDir="_partialDataset_SyntheticData/S-7", partialLen=100)
-
-
-
-
-
-checkPartialData = function(inputDataList,  partialLen =  100, skipVal = "none")
-{
-	len = length(inputDataList)
-	resPartialData = NULL
-	for (i in 1:len)
-	{
-		print(paste(i, "/", len))
-		resPartialData[[i]] = getPartialData(dataVec=as.numeric(as.matrix(inputDataList[[i]])), partialLength=partialLen, 
-														stepSize=1, skipVal = skipVal,
-														fileProcess=FALSE, print=FALSE, printStep=1000,
-														tempFolderName = "temp",	multicore=FALSE, numCores=NULL)
-	}
-	return(resPartialData)
-}
 
 
 ##### Korea University
 getkWh_KoreaUniv = function(i)
 (
-	return(data_KoreaUniv[[i]][,4])
+	return(data_KoreaUniv[[i]][,c(2, 3, 4)])
 )
 data_KoreaUniv = pbmclapply(1:length(data_KoreaUniv) , getkWh_KoreaUniv, mc.cores=numCores)
 
-temp_none = checkPartialData(inputDataList=data_KoreaUniv, partialLen=96, skipVal = "none")
-temp_NA = checkPartialData(inputDataList=data_KoreaUniv, partialLen=96, skipVal = "NA")
+# temp_none = checkPartialData(inputDataList=data_KoreaUniv, partialLen=96, skipVal = "none")
+# temp_NA = checkPartialData(inputDataList=data_KoreaUniv, partialLen=96, skipVal = "NA")
 
 
 saveShinyData(inputDataList=data_KoreaUniv, saveDir="ShinyApp_dataset_KoreaUniv")
 # savePartialData(inputDataList=data_KoreaUniv, saveDir="_partialDataset_KoreaUniv", partialLen=96)
-saveRDS(temp_none[[1]], "_partialDataset_KoreaUniv/1.RDS")
-saveRDS(temp_NA[[2]], "_partialDataset_KoreaUniv/2.RDS")
-saveRDS(temp_NA[[3]], "_partialDataset_KoreaUniv/3.RDS")
-saveRDS(temp_none[[4]], "_partialDataset_KoreaUniv/4.RDS")
+# saveRDS(temp_none[[1]], "_partialDataset_KoreaUniv/1.RDS")
+# saveRDS(temp_NA[[2]], "_partialDataset_KoreaUniv/2.RDS")
+# saveRDS(temp_NA[[3]], "_partialDataset_KoreaUniv/3.RDS")
+# saveRDS(temp_none[[4]], "_partialDataset_KoreaUniv/4.RDS")
+# qsave(temp_none[[1]], "_partialDataset_KoreaUniv/1.QS")
+# qsave(temp_NA[[2]], "_partialDataset_KoreaUniv/2.QS")
+# qsave(temp_NA[[3]], "_partialDataset_KoreaUniv/3.QS")
+# qsave(temp_none[[4]], "_partialDataset_KoreaUniv/4.QS")
 
 
 ### for Check
@@ -217,30 +140,94 @@ str(partialData)
 
 
 
-##### ENTSO-E
-# temp_none = checkPartialData(inputDataList=data_ENTSOE, partialLen=4*24*7, skipVal = "none")
-# temp_NA = checkPartialData(inputDataList=data_ENTSOE, partialLen=4*24*7, skipVal = "NA")
 
-# getLength = function(i, inputList)
-# {
-	# return(length(inputList[[i]]$data))
-# }
-# unlist(pbmclapply(1:length(temp_none), getLength, temp_none, mc.cores=numCores))
-# unlist(pbmclapply(1:length(temp_NA), getLength, temp_NA, mc.cores=numCores))
+
+
+
+
+##### ENTSO-E
+temp_none = checkPartialData(inputDataList=data_ENTSOE, partialLen=4*24*7, skipVal = "none")
+temp_NA = checkPartialData(inputDataList=data_ENTSOE, partialLen=4*24*7, skipVal = "NA")
+
+getLength = function(i, inputList)
+{
+	return(length(inputList[[i]]$data))
+}
+unlist(pbmclapply(1:length(temp_none), getLength, temp_none, mc.cores=numCores))
+unlist(pbmclapply(1:length(temp_NA), getLength, temp_NA, mc.cores=numCores))
+
+
+### scaling
+# data_ENTSOE = pbmclapply(data_ENTSOE, scale, mc.cores=numCores)
+# data_ENTSOE = pbmclapply(data_ENTSOE, as.numeric, mc.cores=numCores)
+
+
+saveShinyData = function(inputDataList, saveDir)
+{
+	len = length(inputDataList)
+	for (i in 1:len)
+	{
+		print(paste(i, "/", len))
+		
+		resSaveDir = paste0("./", saveDir, "/", i, ".feather")
+		print(resSaveDir)
+		write_feather(as.data.frame(as.numeric(scale(inputDataList[[i]]))), resSaveDir)
+		# write_feather(as.data.frame(inputDataList[[i]]), resSaveDir)
+		# Sys.sleep(1)
+	}
+}
+
+
+savePartialData = function(inputDataList, saveDir, partialLen =  100, skipVal = "none")
+{
+	len = length(inputDataList)
+	for (i in 1:len)
+	{
+		print(paste(i, "/", len))
+		resPartialData = getPartialData(dataVec=as.numeric(scale(as.matrix(inputDataList[[i]]))), partialLength=partialLen, 
+																stepSize=1, skipVal = skipVal,
+																fileProcess=FALSE, print=FALSE, printStep=1000,
+																tempFolderName = "temp",	multicore=FALSE, numCores=NULL)
+		# resPartialData = getPartialData(dataVec=as.numeric(as.matrix(inputDataList[[i]])), partialLength=partialLen, 
+														# stepSize=1, skipVal = skipVal,
+														# fileProcess=FALSE, print=FALSE, printStep=1000,
+														# tempFolderName = "temp",	multicore=FALSE, numCores=NULL)
+		# resSaveDir = paste0("./", saveDir, "/", i, ".RDS")
+		resSaveDir = paste0("./", saveDir, "/", i, ".QS")
+		print(resSaveDir)
+		# saveRDS(resPartialData, resSaveDir)
+		qsave(resPartialData, resSaveDir)
+	}
+}
+
+
+
 
 saveShinyData(inputDataList=data_ENTSOE, saveDir="ShinyApp_dataset_ENTSO-E")
 savePartialData(inputDataList=data_ENTSOE, saveDir="_partialDataset_ENTSO-E", partialLen=4*24*7)
 
 
 ### for Check
-fileDir_partial = "./_partialDataset_ENTSO-E/"
-listFiles_partial = list.files(fileDir_partial)
+# fileDir_partial = "./_partialDataset_ENTSO-E/"
+# listFiles_partial = list.files(fileDir_partial)
 
-partialData = readRDS(paste0(fileDir_partial, listFiles_partial[2]))
-str(partialData)
+# partialData = readRDS(paste0(fileDir_partial, listFiles_partial[2]))
+# str(partialData)
 
 
 
+
+
+
+getPWRQTY = function(SNOC_IDX)
+{
+	whichIDX = which(uniq_SNOC[[yearIDX]][SNOC_IDX] == data_KEPCO[[yearIDX]][,2])
+	tempData = data_KEPCO[[yearIDX]][whichIDX,]
+	
+	res = seqAllDatetime_KEPCO(years[yearIDX], tempData)
+	res = res[,c(1, 4)]
+	return(res)
+}
 
 
 ##### KEPCO
@@ -252,6 +239,45 @@ data_KEPCO_2015 = pbmclapply(1:length(data_KEPCO_2015) , getkWh_KEPCO, data_KEPC
 data_KEPCO_2016 = pbmclapply(1:length(data_KEPCO_2016) , getkWh_KEPCO, data_KEPCO_2016,  mc.cores=numCores)
 data_KEPCO_2017 = pbmclapply(1:length(data_KEPCO_2017) , getkWh_KEPCO, data_KEPCO_2017, mc.cores=numCores)
 data_KEPCO_2018 = pbmclapply(1:length(data_KEPCO_2018) , getkWh_KEPCO, data_KEPCO_2018, mc.cores=numCores)
+
+
+saveShinyData = function(inputDataList, saveDir)
+{
+	len = length(inputDataList)
+	for (i in 1:len)
+	{
+		print(paste(i, "/", len))
+		
+		resSaveDir = paste0("./", saveDir, "/", i, ".feather")
+		print(resSaveDir)
+		write_feather(as.data.frame(as.numeric(scale(as.numeric(inputDataList[[i]])))), resSaveDir)
+		# write_feather(as.data.frame(inputDataList[[i]]), resSaveDir)
+		# Sys.sleep(1)
+	}
+}
+
+savePartialData = function(inputDataList, saveDir, partialLen =  100, skipVal = "none")
+{
+	len = length(inputDataList)
+	for (i in 1:len)
+	{
+		print(paste(i, "/", len))
+		resPartialData = getPartialData(dataVec=as.numeric(scale(as.matrix(as.numeric(inputDataList[[i]])))), partialLength=partialLen, 
+																stepSize=1, skipVal = skipVal,
+																fileProcess=FALSE, print=FALSE, printStep=1000,
+																tempFolderName = "temp",	multicore=FALSE, numCores=NULL)
+		# resPartialData = getPartialData(dataVec=as.numeric(as.matrix(inputDataList[[i]])), partialLength=partialLen, 
+														# stepSize=1, skipVal = skipVal,
+														# fileProcess=FALSE, print=FALSE, printStep=1000,
+														# tempFolderName = "temp",	multicore=FALSE, numCores=NULL)
+		# resSaveDir = paste0("./", saveDir, "/", i, ".RDS")
+		resSaveDir = paste0("./", saveDir, "/", i, ".QS")
+		print(resSaveDir)
+		# saveRDS(resPartialData, resSaveDir)
+		qsave(resPartialData, resSaveDir)
+	}
+}
+
 
 
 # 2015

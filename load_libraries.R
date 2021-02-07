@@ -15,6 +15,7 @@ require(compiler)
 
 ##### Data Handling
 require(feather)
+require(qs)
 require(data.table)
 require(dplyr)
 require(DT)		# datatable
@@ -37,7 +38,7 @@ require(dygraphs)
 require(gplots)
 require(ggplot2)
 require(plotly)
-require(networkD3)
+# require(networkD3)
 
 
 #####

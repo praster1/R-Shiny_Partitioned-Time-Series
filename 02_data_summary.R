@@ -19,64 +19,42 @@ numCores = detectCores()
 
 
 ########## 데이터 불러오기
-
+filesDir = "./_Dataset/"
+listFiles = list.files(filesDir)
 
 
 ##### Korea University
-filesDir = "./_dataset_KoreaUniv/"
-listFiles = list.files(filesDir)
-
 listFiles_KoreaUniv = listFiles[grep("KoreaUniv", listFiles)]
+listFiles_KoreaUniv = listFiles_KoreaUniv[grep(".QS", listFiles_KoreaUniv)]
+listFiles_KoreaUniv = paste0(filesDir, listFiles_KoreaUniv)
 len = length(listFiles_KoreaUniv)
 
-
-data_KoreaUniv = pbmclapply(1:len, readData, listFiles_KoreaUniv, filesDir, mc.cores=numCores)
+data_KoreaUniv = pbmclapply(listFiles_KoreaUniv, qread, mc.cores=numCores)
 
 
 
 ##### ENTSO-E
-filesDir = "./_dataset_ENTSO-E/"
-listFiles = list.files(filesDir)
-
-listFiles_ENTSOE = listFiles[grep("ENTSO-E", listFiles)]
-len = length(listFiles_ENTSOE)
-
-
-data_ENTSOE = pbmclapply(1:len, readData, listFiles_ENTSOE, filesDir, mc.cores=numCores)
+data_ENTSOE = qread("./_Dataset/ENTSO-E.QS")
+params_ENTSOE = qread("./_Dataset/ENTSO-E_pamams.QS")
 
 
 
 
 ##### KEPCO
-filesDir = "./_dataset_KEPCO/"
-listFiles = list.files(filesDir)
-
 listFiles_KEPCO = listFiles[grep("KEPCO", listFiles)]
+listFiles_KEPCO = listFiles_KEPCO[grep(".QS", listFiles_KEPCO)]
+listFiles_KEPCO = paste0(filesDir, listFiles_KEPCO)
 len = length(listFiles_KEPCO)
 
+data_KEPCO = pbmclapply(listFiles_KEPCO, qread, mc.cores=numCores)
 
-### List로 저장되어있으며, 각각 2015, 2016, 2017, 2018년 데이터
-data_KEPCO = pbmclapply(1:len, readData, listFiles_KEPCO, filesDir, mc.cores=numCores)
+for (i in 1:length(data_KEPCO))
+{
+	data_KEPCO[[i]]$ACT_PWR_QTY[which(is.na(data_KEPCO[[i]]$ACT_PWR_QTY))] = 0
+	data_KEPCO[[i]]$ACT_PWR_QTY = as.numeric(data_KEPCO[[i]]$ACT_PWR_QTY)
+}
 
-# dim(unique(data_KEPCO[[1]][,2]))		# SNOC
-# [1] 488   1
-# dim(unique(data_KEPCO[[1]][,3]))		# METER_ID
-# [1] 465   1
-
-# dim(unique(data_KEPCO[[2]][,2]))		# SNOC
-# [1] 1126    1
-# dim(unique(data_KEPCO[[2]][,3]))		# METER_ID
-# [1] 920   1
-
-# dim(unique(data_KEPCO[[3]][,2]))		# SNOC
-# [1] 1267    1
-# dim(unique(data_KEPCO[[3]][,3]))		# METER_ID
-# [1] 1234    1
-
-# dim(unique(data_KEPCO[[4]][,2]))		# SNOC
-# [1] 1229    1
-# dim(unique(data_KEPCO[[4]][,3]))		# METER_ID
-# [1] 1222    1
+temp = aggregate(ACT_PWR_QTY ~ SNOC + YearDate, data_KEPCO[[1]], sum)
 
 
 getUniqSNOC = function(i)	

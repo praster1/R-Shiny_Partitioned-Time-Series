@@ -380,10 +380,12 @@ saveRDS(res, paste0(saveResultDir, "resultSet.RDS"))
 
 ##### ENTSO-E
 data_ENTSOE = readData("./ShinyApp_dataset_ENTSO-E/")
+# data_ENTSOE = pbmclapply(data_ENTSOE, scale)
+# data_ENTSOE = pbmclapply(data_ENTSOE, as.numeric)
 
 partialLen = 4*24*7
 obsDataVec = (as.numeric(as.matrix(data_ENTSOE[[1]])))[3000:(3099+partialLen - 1)]
-rm(data_ENTSOE)
+# rm(data_ENTSOE)
 
 
 fileDir_partial = "./_partialDataset_ENTSO-E/"
