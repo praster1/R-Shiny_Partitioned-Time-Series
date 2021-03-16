@@ -95,15 +95,15 @@ years = c(2015:2018)
 IDX = 1:length(years)
 
 
-##### 데이터 불러오기 
+##### 데이터 불러오기
 readData = function(i)
 {
 	year = years[i]
-	
+
 	readData = qread(paste0(filesDir, year, ".QS"))
 	readData = as_tibble(readData)
 	readData = data.table(YearDate = strptime(paste0(readData$MR_YMD, readData$MR_HHMI, "00"), format='%Y%m%d%H%M%S'), readData[,-c(1:2)])
-	
+
 	return(readData)
 }
 
@@ -119,7 +119,7 @@ seqAllDatetime = function(i)
 
 	tempData = data[[i]]
 	tempData$YearDate = as.character(tempData$YearDate)
-	
+
 	resData = left_join(allDatetime, tempData, by="YearDate")
 	return(resData)
 }
@@ -142,14 +142,14 @@ buildings = c("녹지캠", "인문대", "창의관", "하나과학관")
 IDX = 1:length(buildings)
 
 
-##### 데이터 불러오기 
+##### 데이터 불러오기
 read_CSV = function(i)
 {
 	building = buildings[i]
-	
+
 	readData = fread(paste(filesDir, "data_", building, "_15min.csv", sep=""))
 	readData = as.data.table(readData)
-	
+
 	return(readData)
 }
 
@@ -186,7 +186,7 @@ dataVec = mclapply(1:length(uniq), getDataVec, data, uniq, mc.cores = numCores)
 
 
 # Imputation: 0값을 전부 NA으로 대체
-getDataVecItem =  function(i){	return(dataVec[[i]])}	
+getDataVecItem =  function(i){	return(dataVec[[i]])}
 NAto0 = function(i)	{	tempVec = getDataVecItem(i);	NAIdx = which(tempVec == 0);	tempVec[NAIdx] = NA;		return(tempVec);	}
 dataVec = mclapply(1:length(uniq), NAto0, mc.cores = numCores)
 
