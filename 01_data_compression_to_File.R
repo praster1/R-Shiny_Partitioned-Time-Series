@@ -115,10 +115,10 @@ seqAllDatetime = function(i)
 {
 	year = years[i]
 
-	allDatetime = data.table(YearDate = POSIXct2Character(seqDateVec(year)))
+	allDatetime = data.table(YearDate = as.character(seqDateVec(year)))
 
 	tempData = data[[i]]
-	tempData$YearDate = POSIXct2Character(tempData$YearDate)
+	tempData$YearDate = as.character(tempData$YearDate)
 	
 	resData = left_join(allDatetime, tempData, by="YearDate")
 	return(resData)
